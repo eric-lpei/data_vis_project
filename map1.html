@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Express Bus Visualization with Leaflet</title>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
+    <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+    <script src="https://d3js.org/d3.v5.min.js"></script>
+    <style>
+        #map {
+            width: 100%;
+            height: 80vh;
+        }
+        .route {
+            fill: none;
+            stroke: steelblue;
+            stroke-width: 2;
+        }
+        .highlight {
+            fill: none;
+        }
+        #tooltip {
+            position: absolute;
+            background: white;
+            border: 1px solid #ccc;
+            padding: 5px;
+            visibility: hidden;
+        }
+    </style>
+</head>
+<body>
+    <div>
+        <label for="week-select">Week:</label>
+        <select id="week-select"></select>
+
+        <label for="daytype-select">Day Type:</label>
+        <select id="daytype-select"></select>
+
+        <label for="route-select">Route:</label>
+        <select id="route-select"></select>
+
+        <label for="hour-select">Hour:</label>
+        <select id="hour-select"></select>
+    </div>
+    <div id="tooltip"></div>
+    <div id="map"></div>
+    <script>
+        // Initialize Leaflet map
+        const map = L.map('map').setView([40.730610, -73.935242], 12); // NYC center
+
+        // Add OpenStreetMap tiles
+        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            attribution: '&copy; OpenStreetMap contributors'
+        }).addTo(map);
+
+        // Create an SVG layer to overlay D3 graphics
+        const svgLayer = L.svg();
+        svgLayer.addTo(map);
+
+        // Select the SVG layer
+        const svg = d3.select("#map").select("svg");
+        const g = svg.append("g").attr("class", "leaflet-zoom-hide");
+
+        const tooltip = d3.select("#tooltip");
+
+        // Define a D3 projection that matches the Leaflet map
+        function projectPoint(lat, lon) {
+            const point = map.latLngToLayerPoint(new L.LatLng(lat, lon));
+            return [point.x, point.y];
+        }
+
+        const line = d3.line()
+            .x(d => projectPoint(d.lat, d.lon)[0])
+            .y(d => projectPoint(d.lat, d.lon)[1]);
+
+        // Global variable to store highlighted shapes and merge data
+        let highlightedShapes = [];
+        let highlightedMergeData = [];
+
+        // Load datasets
+        Promise.all([
+            d3.csv("./gtfs_b_d3data/express/filtered_shapes.csv"),
+            d3.csv("./merge_data.csv")
+        ]).then(([expressShapes, mergeData]) => {
+            // Parse numeric fields
+            expressShapes.forEach(d => {
+                d.lat = +d.shape_pt_lat;
+                d.lon = +d.shape_pt_lon;
+            });
+
+            mergeData.forEach(d => {
+                d.Hour = +d.Hour;
+                d.Load_percentage = +d.Load_percentage;
+            });
+
+            console.log("Express Shapes:", expressShapes);
+            console.log("Merge Data:", mergeData);
+
+            // Draw all routes initially
+            drawRoutes(expressShapes);
+
+            // Populate dropdowns
+            populateDropdown("week-select", [...new Set(mergeData.map(d => d.Week))]);
+            populateDropdown("daytype-select", [...new Set(mergeData.map(d => d.Day_Type))]);
+            populateDropdown("route-select", [...new Set(mergeData.map(d => d.route_id))]);
+            populateDropdown("hour-select", [...new Set(mergeData.map(d => +d.Hour))]);
+
+            // Filter and update routes
+            d3.selectAll("select").on("change", () => {
+                const Week = d3.select("#week-select").node().value;
+                const Day_Type = d3.select("#daytype-select").node().value;
+                const routeId = d3.select("#route-select").node().value;
+                const Hour = +d3.select("#hour-select").node().value;
+
+                console.log("Selected Filters:", { Week, Day_Type, routeId, Hour });
+
+                const filteredMerge = mergeData.filter(d =>
+                    d.Week === Week &&
+                    d.Day_Type === Day_Type &&
+                    d.route_id === routeId &&
+                    d.Hour === Hour
+                );
+                console.log("Filtered Merge Data:", filteredMerge);
+
+                highlightedShapes = expressShapes.filter(d =>
+                    filteredMerge.some(mergeItem => mergeItem.shape_id === d.shape_id)
+                );
+                highlightedMergeData = filteredMerge; // Save filtered merge data
+                console.log("Shapes to Highlight:", highlightedShapes);
+
+                drawHighlightedRoutes(highlightedShapes, highlightedMergeData);
+            });
+
+            // Listen to zoom and move events
+            map.on("zoom move", () => {
+                drawRoutes(expressShapes); // Reproject all routes
+                drawHighlightedRoutes(highlightedShapes, highlightedMergeData); // Reproject highlighted routes
+            });
+
+            function populateDropdown(id, values) {
+                const dropdown = d3.select(`#${id}`);
+                dropdown.selectAll("option")
+                    .data(values)
+                    .enter()
+                    .append("option")
+                    .attr("value", d => d)
+                    .text(d => d);
+            }
+
+            function drawRoutes(routes) {
+                // Group data by shape_id
+                const groupedRoutes = d3.nest()
+                    .key(d => d.shape_id)
+                    .entries(routes);
+
+                // Bind data to paths
+                const paths = g.selectAll(".route")
+                    .data(groupedRoutes);
+
+                // Enter: Create new paths
+                paths.enter()
+                    .append("path")
+                    .attr("class", "route")
+                    .merge(paths) // Merge with existing paths
+                    .attr("d", d => line(d.values)) // Update path data
+                    .attr("stroke", "steelblue")
+                    .attr("fill", "none")
+                    .attr("stroke-width", 2);
+
+                // Exit: Remove unused paths
+                paths.exit().remove();
+            }
+
+            function drawHighlightedRoutes(routes, mergeData = []) {
+                // Clear previous highlights
+                g.selectAll(".highlight").remove();
+
+                // Create a map for load percentages
+                const loadPercentageMap = mergeData.reduce((acc, d) => {
+                    acc[d.shape_id] = d.Load_percentage ; // Normalize Load_percentage to [0, 1]
+                    return acc;
+                }, {});
+
+                console.log("Load Percentage Map:", loadPercentageMap);
+
+                const colorScale = d3.scaleLinear()
+                    .domain([0, 1]) // Adjust based on Load_percentage range
+                    .range(["green", "red"]); // Low load is green, high load is red
+
+                // Draw highlighted routes
+                g.selectAll(".highlight")
+                    .data(d3.nest().key(d => d.shape_id).entries(routes))
+                    .enter()
+                    .append("path")
+                    .attr("class", "highlight")
+                    .merge(g.selectAll(".highlight"))
+                    .attr("d", d => line(d.values)) // Recompute path based on projection
+                    .attr("fill", "none")
+                    .attr("stroke-width", d => Math.max((loadPercentageMap[d.key] || 0.1) * 20, 1))
+                    .attr("stroke", d => colorScale(loadPercentageMap[d.key] || 0))
+                    .on("mouseover", (event, d) => {
+                        tooltip.style("visibility", "visible")
+                            .style("top", `${event.pageY}px`)
+                            .style("left", `${event.pageX}px`)
+                            .html(`Shape ID: ${d.key}<br>Load: ${(loadPercentageMap[d.key] * 100 || 0).toFixed(1)}%`);
+                    })
+                    .on("mouseout", () => tooltip.style("visibility", "hidden"));
+            }
+        });
+    </script>
+</body>
+</html>
