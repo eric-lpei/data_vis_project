@@ -1,0 +1,551 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <title></title>
+  <meta charset="utf-8">
+  <link rel="stylesheet" href="https://unpkg.com/bootstrap@4/dist/css/bootstrap.min.css">
+  <link rel="stylesheet" href="css/chart_styles.css">
+  <meta name="viewport" content="initial-scale=1.0, width=device-width">
+</head>
+
+<body>
+  <div class="container">
+    <div class="row mt-4 mb-2">
+      <div class="col-md-12">
+        <h1 class="overview-label">Chicago Transit Authority Routes</h1>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col">
+        <div class="list-group"><a class="list-group-item" href="charts/1.html">
+            <h4 class="list-group-item-heading d-flex align-items-center">
+              <div class="route-color-swatch-large" style="background-color: #565a5c"></div><span>1 - Bronzeville/Union Station</span>
+            </h4>
+          </a><a class="list-group-item" href="charts/2.html">
+            <h4 class="list-group-item-heading d-flex align-items-center">
+              <div class="route-color-swatch-large" style="background-color: #b71234"></div><span>2 - Hyde Park Express</span>
+            </h4>
+          </a><a class="list-group-item" href="charts/3.html">
+            <h4 class="list-group-item-heading d-flex align-items-center">
+              <div class="route-color-swatch-large" style="background-color: #565a5c"></div><span>3 - King Drive</span>
+            </h4>
+          </a><a class="list-group-item" href="charts/4.html">
+            <h4 class="list-group-item-heading d-flex align-items-center">
+              <div class="route-color-swatch-large" style="background-color: #565a5c"></div><span>4 - Cottage Grove</span>
+            </h4>
+          </a><a class="list-group-item" href="charts/5.html">
+            <h4 class="list-group-item-heading d-flex align-items-center">
+              <div class="route-color-swatch-large" style="background-color: #565a5c"></div><span>5 - South Shore Night Bus</span>
+            </h4>
+          </a><a class="list-group-item" href="charts/6.html">
+            <h4 class="list-group-item-heading d-flex align-items-center">
+              <div class="route-color-swatch-large" style="background-color: #b71234"></div><span>6 - Jackson Park Express</span>
+            </h4>
+          </a><a class="list-group-item" href="charts/7.html">
+            <h4 class="list-group-item-heading d-flex align-items-center">
+              <div class="route-color-swatch-large" style="background-color: #565a5c"></div><span>7 - Harrison</span>
+            </h4>
+          </a><a class="list-group-item" href="charts/8.html">
+            <h4 class="list-group-item-heading d-flex align-items-center">
+              <div class="route-color-swatch-large" style="background-color: #565a5c"></div><span>8 - Halsted</span>
+            </h4>
+          </a><a class="list-group-item" href="charts/8A.html">
+            <h4 class="list-group-item-heading d-flex align-items-center">
+              <div class="route-color-swatch-large" style="background-color: #565a5c"></div><span>8A - South Halsted</span>
+            </h4>
+          </a><a class="list-group-item" href="charts/9.html">
+            <h4 class="list-group-item-heading d-flex align-items-center">
+              <div class="route-color-swatch-large" style="background-color: #565a5c"></div><span>9 - Ashland</span>
+            </h4>
+          </a><a class="list-group-item" href="charts/11.html">
+            <h4 class="list-group-item-heading d-flex align-items-center">
+              <div class="route-color-swatch-large" style="background-color: #565a5c"></div><span>11 - Lincoln</span>
+            </h4>
+          </a><a class="list-group-item" href="charts/12.html">
+            <h4 class="list-group-item-heading d-flex align-items-center">
+              <div class="route-color-swatch-large" style="background-color: #565a5c"></div><span>12 - Roosevelt</span>
+            </h4>
+          </a><a class="list-group-item" href="charts/15.html">
+            <h4 class="list-group-item-heading d-flex align-items-center">
+              <div class="route-color-swatch-large" style="background-color: #565a5c"></div><span>15 - Jeffery Local</span>
+            </h4>
+          </a><a class="list-group-item" href="charts/18.html">
+            <h4 class="list-group-item-heading d-flex align-items-center">
+              <div class="route-color-swatch-large" style="background-color: #565a5c"></div><span>18 - 16th/18th</span>
+            </h4>
+          </a><a class="list-group-item" href="charts/20.html">
+            <h4 class="list-group-item-heading d-flex align-items-center">
+              <div class="route-color-swatch-large" style="background-color: #565a5c"></div><span>20 - Madison</span>
+            </h4>
+          </a><a class="list-group-item" href="charts/21.html">
+            <h4 class="list-group-item-heading d-flex align-items-center">
+              <div class="route-color-swatch-large" style="background-color: #565a5c"></div><span>21 - Cermak</span>
+            </h4>
+          </a><a class="list-group-item" href="charts/22.html">
+            <h4 class="list-group-item-heading d-flex align-items-center">
+              <div class="route-color-swatch-large" style="background-color: #565a5c"></div><span>22 - Clark</span>
+            </h4>
+          </a><a class="list-group-item" href="charts/24.html">
+            <h4 class="list-group-item-heading d-flex align-items-center">
+              <div class="route-color-swatch-large" style="background-color: #565a5c"></div><span>24 - Wentworth</span>
+            </h4>
+          </a><a class="list-group-item" href="charts/26.html">
+            <h4 class="list-group-item-heading d-flex align-items-center">
+              <div class="route-color-swatch-large" style="background-color: #b71234"></div><span>26 - South Shore Express</span>
+            </h4>
+          </a><a class="list-group-item" href="charts/28.html">
+            <h4 class="list-group-item-heading d-flex align-items-center">
+              <div class="route-color-swatch-large" style="background-color: #565a5c"></div><span>28 - Stony Island</span>
+            </h4>
+          </a><a class="list-group-item" href="charts/29.html">
+            <h4 class="list-group-item-heading d-flex align-items-center">
+              <div class="route-color-swatch-large" style="background-color: #565a5c"></div><span>29 - State</span>
+            </h4>
+          </a><a class="list-group-item" href="charts/30.html">
+            <h4 class="list-group-item-heading d-flex align-items-center">
+              <div class="route-color-swatch-large" style="background-color: #565a5c"></div><span>30 - South Chicago</span>
+            </h4>
+          </a><a class="list-group-item" href="charts/31.html">
+            <h4 class="list-group-item-heading d-flex align-items-center">
+              <div class="route-color-swatch-large" style="background-color: #565a5c"></div><span>31 - 31st</span>
+            </h4>
+          </a><a class="list-group-item" href="charts/34.html">
+            <h4 class="list-group-item-heading d-flex align-items-center">
+              <div class="route-color-swatch-large" style="background-color: #565a5c"></div><span>34 - South Michigan</span>
+            </h4>
+          </a><a class="list-group-item" href="charts/35.html">
+            <h4 class="list-group-item-heading d-flex align-items-center">
+              <div class="route-color-swatch-large" style="background-color: #565a5c"></div><span>35 - 31st/35th</span>
+            </h4>
+          </a><a class="list-group-item" href="charts/36.html">
+            <h4 class="list-group-item-heading d-flex align-items-center">
+              <div class="route-color-swatch-large" style="background-color: #565a5c"></div><span>36 - Broadway</span>
+            </h4>
+          </a><a class="list-group-item" href="charts/37.html">
+            <h4 class="list-group-item-heading d-flex align-items-center">
+              <div class="route-color-swatch-large" style="background-color: #565a5c"></div><span>37 - Sedgwick</span>
+            </h4>
+          </a><a class="list-group-item" href="charts/39.html">
+            <h4 class="list-group-item-heading d-flex align-items-center">
+              <div class="route-color-swatch-large" style="background-color: #565a5c"></div><span>39 - Pershing</span>
+            </h4>
+          </a><a class="list-group-item" href="charts/43.html">
+            <h4 class="list-group-item-heading d-flex align-items-center">
+              <div class="route-color-swatch-large" style="background-color: #565a5c"></div><span>43 - 43rd</span>
+            </h4>
+          </a><a class="list-group-item" href="charts/44.html">
+            <h4 class="list-group-item-heading d-flex align-items-center">
+              <div class="route-color-swatch-large" style="background-color: #565a5c"></div><span>44 - Wallace/Racine</span>
+            </h4>
+          </a><a class="list-group-item" href="charts/47.html">
+            <h4 class="list-group-item-heading d-flex align-items-center">
+              <div class="route-color-swatch-large" style="background-color: #565a5c"></div><span>47 - 47th</span>
+            </h4>
+          </a><a class="list-group-item" href="charts/48.html">
+            <h4 class="list-group-item-heading d-flex align-items-center">
+              <div class="route-color-swatch-large" style="background-color: #565a5c"></div><span>48 - South Damen</span>
+            </h4>
+          </a><a class="list-group-item" href="charts/49.html">
+            <h4 class="list-group-item-heading d-flex align-items-center">
+              <div class="route-color-swatch-large" style="background-color: #565a5c"></div><span>49 - Western</span>
+            </h4>
+          </a><a class="list-group-item" href="charts/49B.html">
+            <h4 class="list-group-item-heading d-flex align-items-center">
+              <div class="route-color-swatch-large" style="background-color: #565a5c"></div><span>49B - North Western</span>
+            </h4>
+          </a><a class="list-group-item" href="charts/50.html">
+            <h4 class="list-group-item-heading d-flex align-items-center">
+              <div class="route-color-swatch-large" style="background-color: #565a5c"></div><span>50 - Damen</span>
+            </h4>
+          </a><a class="list-group-item" href="charts/51.html">
+            <h4 class="list-group-item-heading d-flex align-items-center">
+              <div class="route-color-swatch-large" style="background-color: #565a5c"></div><span>51 - 51st</span>
+            </h4>
+          </a><a class="list-group-item" href="charts/52.html">
+            <h4 class="list-group-item-heading d-flex align-items-center">
+              <div class="route-color-swatch-large" style="background-color: #565a5c"></div><span>52 - Kedzie</span>
+            </h4>
+          </a><a class="list-group-item" href="charts/52A.html">
+            <h4 class="list-group-item-heading d-flex align-items-center">
+              <div class="route-color-swatch-large" style="background-color: #565a5c"></div><span>52A - South Kedzie</span>
+            </h4>
+          </a><a class="list-group-item" href="charts/53.html">
+            <h4 class="list-group-item-heading d-flex align-items-center">
+              <div class="route-color-swatch-large" style="background-color: #565a5c"></div><span>53 - Pulaski</span>
+            </h4>
+          </a><a class="list-group-item" href="charts/53A.html">
+            <h4 class="list-group-item-heading d-flex align-items-center">
+              <div class="route-color-swatch-large" style="background-color: #565a5c"></div><span>53A - South Pulaski</span>
+            </h4>
+          </a><a class="list-group-item" href="charts/54.html">
+            <h4 class="list-group-item-heading d-flex align-items-center">
+              <div class="route-color-swatch-large" style="background-color: #565a5c"></div><span>54 - Cicero</span>
+            </h4>
+          </a><a class="list-group-item" href="charts/54A.html">
+            <h4 class="list-group-item-heading d-flex align-items-center">
+              <div class="route-color-swatch-large" style="background-color: #565a5c"></div><span>54A - North Cicero/Skokie Blvd.</span>
+            </h4>
+          </a><a class="list-group-item" href="charts/54B.html">
+            <h4 class="list-group-item-heading d-flex align-items-center">
+              <div class="route-color-swatch-large" style="background-color: #565a5c"></div><span>54B - South Cicero</span>
+            </h4>
+          </a><a class="list-group-item" href="charts/55.html">
+            <h4 class="list-group-item-heading d-flex align-items-center">
+              <div class="route-color-swatch-large" style="background-color: #565a5c"></div><span>55 - Garfield</span>
+            </h4>
+          </a><a class="list-group-item" href="charts/55A.html">
+            <h4 class="list-group-item-heading d-flex align-items-center">
+              <div class="route-color-swatch-large" style="background-color: #565a5c"></div><span>55A - 55th/Austin</span>
+            </h4>
+          </a><a class="list-group-item" href="charts/55N.html">
+            <h4 class="list-group-item-heading d-flex align-items-center">
+              <div class="route-color-swatch-large" style="background-color: #565a5c"></div><span>55N - 55th/Narragansett</span>
+            </h4>
+          </a><a class="list-group-item" href="charts/56.html">
+            <h4 class="list-group-item-heading d-flex align-items-center">
+              <div class="route-color-swatch-large" style="background-color: #565a5c"></div><span>56 - Milwaukee</span>
+            </h4>
+          </a><a class="list-group-item" href="charts/57.html">
+            <h4 class="list-group-item-heading d-flex align-items-center">
+              <div class="route-color-swatch-large" style="background-color: #565a5c"></div><span>57 - Laramie</span>
+            </h4>
+          </a><a class="list-group-item" href="charts/59.html">
+            <h4 class="list-group-item-heading d-flex align-items-center">
+              <div class="route-color-swatch-large" style="background-color: #565a5c"></div><span>59 - 59th/61st</span>
+            </h4>
+          </a><a class="list-group-item" href="charts/60.html">
+            <h4 class="list-group-item-heading d-flex align-items-center">
+              <div class="route-color-swatch-large" style="background-color: #565a5c"></div><span>60 - Blue Island/26th</span>
+            </h4>
+          </a><a class="list-group-item" href="charts/62.html">
+            <h4 class="list-group-item-heading d-flex align-items-center">
+              <div class="route-color-swatch-large" style="background-color: #565a5c"></div><span>62 - Archer</span>
+            </h4>
+          </a><a class="list-group-item" href="charts/62H.html">
+            <h4 class="list-group-item-heading d-flex align-items-center">
+              <div class="route-color-swatch-large" style="background-color: #565a5c"></div><span>62H - Archer/Harlem</span>
+            </h4>
+          </a><a class="list-group-item" href="charts/63.html">
+            <h4 class="list-group-item-heading d-flex align-items-center">
+              <div class="route-color-swatch-large" style="background-color: #565a5c"></div><span>63 - 63rd</span>
+            </h4>
+          </a><a class="list-group-item" href="charts/63W.html">
+            <h4 class="list-group-item-heading d-flex align-items-center">
+              <div class="route-color-swatch-large" style="background-color: #565a5c"></div><span>63W - West 63rd</span>
+            </h4>
+          </a><a class="list-group-item" href="charts/65.html">
+            <h4 class="list-group-item-heading d-flex align-items-center">
+              <div class="route-color-swatch-large" style="background-color: #565a5c"></div><span>65 - Grand</span>
+            </h4>
+          </a><a class="list-group-item" href="charts/66.html">
+            <h4 class="list-group-item-heading d-flex align-items-center">
+              <div class="route-color-swatch-large" style="background-color: #565a5c"></div><span>66 - Chicago</span>
+            </h4>
+          </a><a class="list-group-item" href="charts/67.html">
+            <h4 class="list-group-item-heading d-flex align-items-center">
+              <div class="route-color-swatch-large" style="background-color: #565a5c"></div><span>67 - 67th/69th/71st</span>
+            </h4>
+          </a><a class="list-group-item" href="charts/68.html">
+            <h4 class="list-group-item-heading d-flex align-items-center">
+              <div class="route-color-swatch-large" style="background-color: #565a5c"></div><span>68 - Northwest Highway</span>
+            </h4>
+          </a><a class="list-group-item" href="charts/70.html">
+            <h4 class="list-group-item-heading d-flex align-items-center">
+              <div class="route-color-swatch-large" style="background-color: #565a5c"></div><span>70 - Division</span>
+            </h4>
+          </a><a class="list-group-item" href="charts/71.html">
+            <h4 class="list-group-item-heading d-flex align-items-center">
+              <div class="route-color-swatch-large" style="background-color: #565a5c"></div><span>71 - 71st/South Shore</span>
+            </h4>
+          </a><a class="list-group-item" href="charts/72.html">
+            <h4 class="list-group-item-heading d-flex align-items-center">
+              <div class="route-color-swatch-large" style="background-color: #565a5c"></div><span>72 - North</span>
+            </h4>
+          </a><a class="list-group-item" href="charts/73.html">
+            <h4 class="list-group-item-heading d-flex align-items-center">
+              <div class="route-color-swatch-large" style="background-color: #565a5c"></div><span>73 - Armitage</span>
+            </h4>
+          </a><a class="list-group-item" href="charts/74.html">
+            <h4 class="list-group-item-heading d-flex align-items-center">
+              <div class="route-color-swatch-large" style="background-color: #565a5c"></div><span>74 - Fullerton</span>
+            </h4>
+          </a><a class="list-group-item" href="charts/75.html">
+            <h4 class="list-group-item-heading d-flex align-items-center">
+              <div class="route-color-swatch-large" style="background-color: #565a5c"></div><span>75 - 74th/75th</span>
+            </h4>
+          </a><a class="list-group-item" href="charts/76.html">
+            <h4 class="list-group-item-heading d-flex align-items-center">
+              <div class="route-color-swatch-large" style="background-color: #565a5c"></div><span>76 - Diversey</span>
+            </h4>
+          </a><a class="list-group-item" href="charts/77.html">
+            <h4 class="list-group-item-heading d-flex align-items-center">
+              <div class="route-color-swatch-large" style="background-color: #565a5c"></div><span>77 - Belmont</span>
+            </h4>
+          </a><a class="list-group-item" href="charts/78.html">
+            <h4 class="list-group-item-heading d-flex align-items-center">
+              <div class="route-color-swatch-large" style="background-color: #565a5c"></div><span>78 - Montrose</span>
+            </h4>
+          </a><a class="list-group-item" href="charts/79.html">
+            <h4 class="list-group-item-heading d-flex align-items-center">
+              <div class="route-color-swatch-large" style="background-color: #565a5c"></div><span>79 - 79th</span>
+            </h4>
+          </a><a class="list-group-item" href="charts/80.html">
+            <h4 class="list-group-item-heading d-flex align-items-center">
+              <div class="route-color-swatch-large" style="background-color: #565a5c"></div><span>80 - Irving Park</span>
+            </h4>
+          </a><a class="list-group-item" href="charts/81.html">
+            <h4 class="list-group-item-heading d-flex align-items-center">
+              <div class="route-color-swatch-large" style="background-color: #565a5c"></div><span>81 - Lawrence</span>
+            </h4>
+          </a><a class="list-group-item" href="charts/81W.html">
+            <h4 class="list-group-item-heading d-flex align-items-center">
+              <div class="route-color-swatch-large" style="background-color: #565a5c"></div><span>81W - West Lawrence</span>
+            </h4>
+          </a><a class="list-group-item" href="charts/82.html">
+            <h4 class="list-group-item-heading d-flex align-items-center">
+              <div class="route-color-swatch-large" style="background-color: #565a5c"></div><span>82 - Kimball/Homan</span>
+            </h4>
+          </a><a class="list-group-item" href="charts/84.html">
+            <h4 class="list-group-item-heading d-flex align-items-center">
+              <div class="route-color-swatch-large" style="background-color: #565a5c"></div><span>84 - Peterson</span>
+            </h4>
+          </a><a class="list-group-item" href="charts/85.html">
+            <h4 class="list-group-item-heading d-flex align-items-center">
+              <div class="route-color-swatch-large" style="background-color: #565a5c"></div><span>85 - Central</span>
+            </h4>
+          </a><a class="list-group-item" href="charts/85A.html">
+            <h4 class="list-group-item-heading d-flex align-items-center">
+              <div class="route-color-swatch-large" style="background-color: #565a5c"></div><span>85A - North Central</span>
+            </h4>
+          </a><a class="list-group-item" href="charts/86.html">
+            <h4 class="list-group-item-heading d-flex align-items-center">
+              <div class="route-color-swatch-large" style="background-color: #565a5c"></div><span>86 - Narragansett/Ridgeland</span>
+            </h4>
+          </a><a class="list-group-item" href="charts/87.html">
+            <h4 class="list-group-item-heading d-flex align-items-center">
+              <div class="route-color-swatch-large" style="background-color: #565a5c"></div><span>87 - 87th</span>
+            </h4>
+          </a><a class="list-group-item" href="charts/88.html">
+            <h4 class="list-group-item-heading d-flex align-items-center">
+              <div class="route-color-swatch-large" style="background-color: #565a5c"></div><span>88 - Higgins</span>
+            </h4>
+          </a><a class="list-group-item" href="charts/90.html">
+            <h4 class="list-group-item-heading d-flex align-items-center">
+              <div class="route-color-swatch-large" style="background-color: #565a5c"></div><span>90 - Harlem</span>
+            </h4>
+          </a><a class="list-group-item" href="charts/91.html">
+            <h4 class="list-group-item-heading d-flex align-items-center">
+              <div class="route-color-swatch-large" style="background-color: #565a5c"></div><span>91 - Austin</span>
+            </h4>
+          </a><a class="list-group-item" href="charts/92.html">
+            <h4 class="list-group-item-heading d-flex align-items-center">
+              <div class="route-color-swatch-large" style="background-color: #565a5c"></div><span>92 - Foster</span>
+            </h4>
+          </a><a class="list-group-item" href="charts/93.html">
+            <h4 class="list-group-item-heading d-flex align-items-center">
+              <div class="route-color-swatch-large" style="background-color: #565a5c"></div><span>93 - California/Dodge</span>
+            </h4>
+          </a><a class="list-group-item" href="charts/94.html">
+            <h4 class="list-group-item-heading d-flex align-items-center">
+              <div class="route-color-swatch-large" style="background-color: #565a5c"></div><span>94 - California</span>
+            </h4>
+          </a><a class="list-group-item" href="charts/95.html">
+            <h4 class="list-group-item-heading d-flex align-items-center">
+              <div class="route-color-swatch-large" style="background-color: #565a5c"></div><span>95 - 95th</span>
+            </h4>
+          </a><a class="list-group-item" href="charts/96.html">
+            <h4 class="list-group-item-heading d-flex align-items-center">
+              <div class="route-color-swatch-large" style="background-color: #565a5c"></div><span>96 - Lunt</span>
+            </h4>
+          </a><a class="list-group-item" href="charts/97.html">
+            <h4 class="list-group-item-heading d-flex align-items-center">
+              <div class="route-color-swatch-large" style="background-color: #565a5c"></div><span>97 - Skokie</span>
+            </h4>
+          </a><a class="list-group-item" href="charts/100.html">
+            <h4 class="list-group-item-heading d-flex align-items-center">
+              <div class="route-color-swatch-large" style="background-color: #b71234"></div><span>100 - Jeffery Manor Express</span>
+            </h4>
+          </a><a class="list-group-item" href="charts/103.html">
+            <h4 class="list-group-item-heading d-flex align-items-center">
+              <div class="route-color-swatch-large" style="background-color: #565a5c"></div><span>103 - West 103rd</span>
+            </h4>
+          </a><a class="list-group-item" href="charts/106.html">
+            <h4 class="list-group-item-heading d-flex align-items-center">
+              <div class="route-color-swatch-large" style="background-color: #565a5c"></div><span>106 - East 103rd</span>
+            </h4>
+          </a><a class="list-group-item" href="charts/108.html">
+            <h4 class="list-group-item-heading d-flex align-items-center">
+              <div class="route-color-swatch-large" style="background-color: #565a5c"></div><span>108 - Halsted/95th</span>
+            </h4>
+          </a><a class="list-group-item" href="charts/111.html">
+            <h4 class="list-group-item-heading d-flex align-items-center">
+              <div class="route-color-swatch-large" style="background-color: #565a5c"></div><span>111 - 111th/King Drive</span>
+            </h4>
+          </a><a class="list-group-item" href="charts/111A.html">
+            <h4 class="list-group-item-heading d-flex align-items-center">
+              <div class="route-color-swatch-large" style="background-color: #565a5c"></div><span>111A - Pullman Shuttle</span>
+            </h4>
+          </a><a class="list-group-item" href="charts/112.html">
+            <h4 class="list-group-item-heading d-flex align-items-center">
+              <div class="route-color-swatch-large" style="background-color: #565a5c"></div><span>112 - Vincennes/111th</span>
+            </h4>
+          </a><a class="list-group-item" href="charts/115.html">
+            <h4 class="list-group-item-heading d-flex align-items-center">
+              <div class="route-color-swatch-large" style="background-color: #565a5c"></div><span>115 - Pullman/115th</span>
+            </h4>
+          </a><a class="list-group-item" href="charts/119.html">
+            <h4 class="list-group-item-heading d-flex align-items-center">
+              <div class="route-color-swatch-large" style="background-color: #565a5c"></div><span>119 - Michigan/119th</span>
+            </h4>
+          </a><a class="list-group-item" href="charts/120.html">
+            <h4 class="list-group-item-heading d-flex align-items-center">
+              <div class="route-color-swatch-large" style="background-color: #b71234"></div><span>120 - Ogilvie/Streeterville Express</span>
+            </h4>
+          </a><a class="list-group-item" href="charts/121.html">
+            <h4 class="list-group-item-heading d-flex align-items-center">
+              <div class="route-color-swatch-large" style="background-color: #b71234"></div><span>121 - Union/Streeterville Express</span>
+            </h4>
+          </a><a class="list-group-item" href="charts/124.html">
+            <h4 class="list-group-item-heading d-flex align-items-center">
+              <div class="route-color-swatch-large" style="background-color: #565a5c"></div><span>124 - Navy Pier</span>
+            </h4>
+          </a><a class="list-group-item" href="charts/125.html">
+            <h4 class="list-group-item-heading d-flex align-items-center">
+              <div class="route-color-swatch-large" style="background-color: #b71234"></div><span>125 - Water Tower Express</span>
+            </h4>
+          </a><a class="list-group-item" href="charts/126.html">
+            <h4 class="list-group-item-heading d-flex align-items-center">
+              <div class="route-color-swatch-large" style="background-color: #565a5c"></div><span>126 - Jackson</span>
+            </h4>
+          </a><a class="list-group-item" href="charts/134.html">
+            <h4 class="list-group-item-heading d-flex align-items-center">
+              <div class="route-color-swatch-large" style="background-color: #b71234"></div><span>134 - Stockton/LaSalle Express</span>
+            </h4>
+          </a><a class="list-group-item" href="charts/135.html">
+            <h4 class="list-group-item-heading d-flex align-items-center">
+              <div class="route-color-swatch-large" style="background-color: #b71234"></div><span>135 - Clarendon/LaSalle Express</span>
+            </h4>
+          </a><a class="list-group-item" href="charts/136.html">
+            <h4 class="list-group-item-heading d-flex align-items-center">
+              <div class="route-color-swatch-large" style="background-color: #b71234"></div><span>136 - Sheridan/LaSalle Express</span>
+            </h4>
+          </a><a class="list-group-item" href="charts/143.html">
+            <h4 class="list-group-item-heading d-flex align-items-center">
+              <div class="route-color-swatch-large" style="background-color: #b71234"></div><span>143 - Stockton/Michigan Express</span>
+            </h4>
+          </a><a class="list-group-item" href="charts/146.html">
+            <h4 class="list-group-item-heading d-flex align-items-center">
+              <div class="route-color-swatch-large" style="background-color: #b71234"></div><span>146 - Inner Lake Shore/Michigan Express</span>
+            </h4>
+          </a><a class="list-group-item" href="charts/147.html">
+            <h4 class="list-group-item-heading d-flex align-items-center">
+              <div class="route-color-swatch-large" style="background-color: #b71234"></div><span>147 - Outer DuSable Lake Shore Express</span>
+            </h4>
+          </a><a class="list-group-item" href="charts/148.html">
+            <h4 class="list-group-item-heading d-flex align-items-center">
+              <div class="route-color-swatch-large" style="background-color: #b71234"></div><span>148 - Clarendon/Michigan Express</span>
+            </h4>
+          </a><a class="list-group-item" href="charts/151.html">
+            <h4 class="list-group-item-heading d-flex align-items-center">
+              <div class="route-color-swatch-large" style="background-color: #565a5c"></div><span>151 - Sheridan</span>
+            </h4>
+          </a><a class="list-group-item" href="charts/152.html">
+            <h4 class="list-group-item-heading d-flex align-items-center">
+              <div class="route-color-swatch-large" style="background-color: #565a5c"></div><span>152 - Addison</span>
+            </h4>
+          </a><a class="list-group-item" href="charts/155.html">
+            <h4 class="list-group-item-heading d-flex align-items-center">
+              <div class="route-color-swatch-large" style="background-color: #565a5c"></div><span>155 - Devon</span>
+            </h4>
+          </a><a class="list-group-item" href="charts/156.html">
+            <h4 class="list-group-item-heading d-flex align-items-center">
+              <div class="route-color-swatch-large" style="background-color: #565a5c"></div><span>156 - LaSalle</span>
+            </h4>
+          </a><a class="list-group-item" href="charts/157.html">
+            <h4 class="list-group-item-heading d-flex align-items-center">
+              <div class="route-color-swatch-large" style="background-color: #565a5c"></div><span>157 - Streeterville/Taylor</span>
+            </h4>
+          </a><a class="list-group-item" href="charts/165.html">
+            <h4 class="list-group-item-heading d-flex align-items-center">
+              <div class="route-color-swatch-large" style="background-color: #565a5c"></div><span>165 - West 65th</span>
+            </h4>
+          </a><a class="list-group-item" href="charts/169.html">
+            <h4 class="list-group-item-heading d-flex align-items-center">
+              <div class="route-color-swatch-large" style="background-color: #565a5c"></div><span>169 - 69th/UPS Express</span>
+            </h4>
+          </a><a class="list-group-item" href="charts/171.html">
+            <h4 class="list-group-item-heading d-flex align-items-center">
+              <div class="route-color-swatch-large" style="background-color: #b71234"></div><span>171 - U. of Chicago/Hyde Park</span>
+            </h4>
+          </a><a class="list-group-item" href="charts/172.html">
+            <h4 class="list-group-item-heading d-flex align-items-center">
+              <div class="route-color-swatch-large" style="background-color: #565a5c"></div><span>172 - U. of Chicago/Kenwood</span>
+            </h4>
+          </a><a class="list-group-item" href="charts/192.html">
+            <h4 class="list-group-item-heading d-flex align-items-center">
+              <div class="route-color-swatch-large" style="background-color: #565a5c"></div><span>192 - University of Chicago Hospitals Express</span>
+            </h4>
+          </a><a class="list-group-item" href="charts/201.html">
+            <h4 class="list-group-item-heading d-flex align-items-center">
+              <div class="route-color-swatch-large" style="background-color: #565a5c"></div><span>201 - Central/Ridge</span>
+            </h4>
+          </a><a class="list-group-item" href="charts/206.html">
+            <h4 class="list-group-item-heading d-flex align-items-center">
+              <div class="route-color-swatch-large" style="background-color: #565a5c"></div><span>206 - Evanston Circulator</span>
+            </h4>
+          </a><a class="list-group-item" href="charts/X4.html">
+            <h4 class="list-group-item-heading d-flex align-items-center">
+              <div class="route-color-swatch-large" style="background-color: #b71234"></div><span>X4 - Cottage Grove Express</span>
+            </h4>
+          </a><a class="list-group-item" href="charts/X9.html">
+            <h4 class="list-group-item-heading d-flex align-items-center">
+              <div class="route-color-swatch-large" style="background-color: #b71234"></div><span>X9 - Ashland Express</span>
+            </h4>
+          </a><a class="list-group-item" href="charts/J14.html">
+            <h4 class="list-group-item-heading d-flex align-items-center">
+              <div class="route-color-swatch-large" style="background-color: #0065bd"></div><span>J14 - Jeffery Jump</span>
+            </h4>
+          </a><a class="list-group-item" href="charts/X49.html">
+            <h4 class="list-group-item-heading d-flex align-items-center">
+              <div class="route-color-swatch-large" style="background-color: #b71234"></div><span>X49 - Western Express</span>
+            </h4>
+          </a><a class="list-group-item" href="charts/Red Line.html">
+            <h4 class="list-group-item-heading d-flex align-items-center">
+              <div class="route-color-swatch-large" style="background-color: #C60C30"></div><span>Red Line</span>
+            </h4>
+          </a><a class="list-group-item" href="charts/Purple Line.html">
+            <h4 class="list-group-item-heading d-flex align-items-center">
+              <div class="route-color-swatch-large" style="background-color: #522398"></div><span>Purple Line</span>
+            </h4>
+          </a><a class="list-group-item" href="charts/Yellow Line.html">
+            <h4 class="list-group-item-heading d-flex align-items-center">
+              <div class="route-color-swatch-large" style="background-color: #F9E300"></div><span>Yellow Line</span>
+            </h4>
+          </a><a class="list-group-item" href="charts/Blue Line.html">
+            <h4 class="list-group-item-heading d-flex align-items-center">
+              <div class="route-color-swatch-large" style="background-color: #00A1DE"></div><span>Blue Line</span>
+            </h4>
+          </a><a class="list-group-item" href="charts/Pink Line.html">
+            <h4 class="list-group-item-heading d-flex align-items-center">
+              <div class="route-color-swatch-large" style="background-color: #E27EA6"></div><span>Pink Line</span>
+            </h4>
+          </a><a class="list-group-item" href="charts/Green Line.html">
+            <h4 class="list-group-item-heading d-flex align-items-center">
+              <div class="route-color-swatch-large" style="background-color: #009B3A"></div><span>Green Line</span>
+            </h4>
+          </a><a class="list-group-item" href="charts/Orange Line.html">
+            <h4 class="list-group-item-heading d-flex align-items-center">
+              <div class="route-color-swatch-large" style="background-color: #F9461C"></div><span>Orange Line</span>
+            </h4>
+          </a><a class="list-group-item" href="charts/Brown Line.html">
+            <h4 class="list-group-item-heading d-flex align-items-center">
+              <div class="route-color-swatch-large" style="background-color: #62361B"></div><span>Brown Line</span>
+            </h4>
+          </a></div>
+      </div>
+    </div>
+  </div>
+</body>
+
+</html>
