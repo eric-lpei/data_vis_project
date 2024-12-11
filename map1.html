@@ -95,7 +95,7 @@
       // Load datasets
       Promise.all([
         d3.csv("./gtfs_b_d3data/express/filtered_shapes.csv"),
-        d3.csv("./merge_data.csv"),
+        d3.csv("./gtfs_b_d3data/express/merged_data.csv"),
       ]).then(([expressShapes, mergeData]) => {
         // Parse numeric fields
         expressShapes.forEach((d) => {
@@ -105,7 +105,7 @@
 
         mergeData.forEach((d) => {
           d.Hour = +d.Hour;
-          d.Load_percentage = +d.Load_percentage;
+          d.Load_percentage = +d["Load Percentage"];
         });
 
         console.log("Express Shapes:", expressShapes);
