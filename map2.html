@@ -1,0 +1,649 @@
+<!doctype html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>MTA Express Bus Visualization</title>
+        <!-- Leaflet -->
+        <link
+            rel="stylesheet"
+            href="https://unpkg.com/leaflet/dist/leaflet.css"
+        />
+        <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+
+        <!-- Maplibre GL -->
+        <link
+            href="https://unpkg.com/maplibre-gl/dist/maplibre-gl.css"
+            rel="stylesheet"
+        />
+        <script src="https://unpkg.com/maplibre-gl/dist/maplibre-gl.js"></script>
+
+        <!-- Maplibre GL Leaflet Plugin -->
+        <script src="https://unpkg.com/@maplibre/maplibre-gl-leaflet/leaflet-maplibre-gl.js"></script>
+
+        <!-- D3 -->
+        <script src="https://d3js.org/d3.v5.min.js"></script>
+        <style>
+            body {
+                font-family: Arial, sans-serif;
+                margin: 10px;
+            }
+
+            .controls {
+                display: flex;
+                flex-wrap: wrap;
+                gap: 15px;
+                margin-bottom: 10px;
+                align-items: center;
+            }
+
+            .controls label {
+                font-weight: bold;
+                margin-right: 5px;
+            }
+
+            .controls select {
+                padding: 5px 10px;
+                border: 1px solid #ccc;
+                border-radius: 4px;
+                background-color: #fff;
+                font-size: 14px;
+            }
+
+            .controls select:focus {
+                outline: none;
+                border-color: #888;
+            }
+
+            #map {
+                width: 100%;
+                height: 60vh;
+                border: 1px solid #ccc;
+                border-radius: 8px;
+                overflow: hidden;
+                position: relative;
+            }
+
+            #chart {
+                width: 100%;
+                height: 25vh;
+                border: 1px solid #ccc;
+                border-radius: 8px;
+                overflow: hidden;
+                position: relative;
+            }
+
+            .route {
+                fill: none;
+                stroke-width: 4;
+            }
+
+            .stop {
+                fill: #1d70b8;
+                stroke: #fff;
+                stroke-width: 1px;
+                cursor: pointer;
+            }
+
+            #tooltip {
+                position: absolute;
+                background: white;
+                border: 1px solid #ccc;
+                padding: 5px;
+                visibility: hidden;
+                pointer-events: none;
+                font-size: 12px;
+            }
+
+            #load-info {
+                margin-top: 10px;
+                margin-bottom: 10px;
+                font-family: Arial, sans-serif;
+            }
+
+            .load-indicator {
+                width: 10px;
+                height: 10px;
+                display: inline-block;
+                border-radius: 50%;
+                margin-left: 5px;
+                vertical-align: middle;
+            }
+        </style>
+    </head>
+    <body>
+        <div class="controls">
+            <div>
+                <label for="week-select">Week:</label>
+                <select id="week-select"></select>
+            </div>
+            <div>
+                <label for="daytype-select">Day Type:</label>
+                <select id="daytype-select"></select>
+            </div>
+            <div>
+                <label for="route-select">Route (by ID):</label>
+                <select id="route-select"></select>
+            </div>
+            <div>
+                <label for="direction-select">Direction:</label>
+                <select id="direction-select">
+                    <option value="NB">NB</option>
+                    <option value="SB">SB</option>
+                    <option value="EB">EB</option>
+                    <option value="WB">WB</option>
+                </select>
+            </div>
+        </div>
+
+        <div id="tooltip"></div>
+        <div id="map"></div>
+        <div id="load-info"></div>
+        <div id="chart"></div>
+
+        <script>
+            // Initialize Leaflet map
+            const map = L.map("map").setView([40.73061, -73.935242], 12); // NYC center
+
+            // Add a basemap layer
+            L.maplibreGL({
+                style: "https://tiles.openfreemap.org/styles/positron",
+                attribution:
+                    '&copy; <a href="https://www.openstreetmap.org/">OpenStreetMap</a>',
+            }).addTo(map);
+
+            // Create an SVG overlay for D3
+            const svgLayer = L.svg();
+            svgLayer.addTo(map);
+
+            // Select the SVG overlay
+            const svg = d3.select("#map").select("svg");
+            const g = svg.append("g").attr("class", "leaflet-zoom-hide");
+
+            const tooltip = d3.select("#tooltip");
+            const loadInfo = d3.select("#load-info");
+
+            const weekSelect = d3.select("#week-select");
+            const daytypeSelect = d3.select("#daytype-select");
+            const routeSelect = d3.select("#route-select");
+            const directionSelect = d3.select("#direction-select");
+
+            const boroughs = [
+                "bronx",
+                "manhattan",
+                "brooklyn",
+                "queens",
+                "statenisland",
+                "busco",
+            ];
+
+            let routesData = [];
+            let tripsData = [];
+            let shapesData = [];
+            let stopsData = [];
+            let stopTimesData = [];
+            let loadsData = [];
+
+            let routePath;
+            let currentRouteData = [];
+            let stopsGroup;
+            let currentStopsData = [];
+
+            async function loadBoroughData(borough) {
+                // Load all files needed for a single borough
+                const [r, t, s, st, stt] = await Promise.all([
+                    d3.csv(`data/${borough}/routes.txt`),
+                    d3.csv(`data/${borough}/trips.txt`),
+                    d3.csv(`data/${borough}/shapes.txt`),
+                    d3.csv(`data/${borough}/stops.txt`),
+                    d3.csv(`data/${borough}/stop_times.txt`),
+                ]);
+
+                // Concatenate data into global arrays
+                routesData = routesData.concat(r);
+                tripsData = tripsData.concat(t);
+                shapesData = shapesData.concat(s);
+                stopsData = stopsData.concat(st);
+                stopTimesData = stopTimesData.concat(stt);
+            }
+
+            async function loadData() {
+                try {
+                    // Load loadsData once
+                    loadsData = await d3.csv("data/loads.csv");
+
+                    // Load data for each borough in parallel
+                    const boroughPromises = boroughs.map((b) =>
+                        loadBoroughData(b),
+                    );
+                    await Promise.all(boroughPromises);
+
+                    // All data is loaded now
+                    populateDropdowns();
+                    updateVisualization();
+                } catch (err) {
+                    console.error("Error loading data:", err);
+                }
+            }
+
+            // Initiate the loading process
+            loadData();
+
+            function populateDropdowns() {
+                // Weeks from loadsData
+                const weeks = Array.from(
+                    new Set(loadsData.map((d) => d.Week)),
+                ).sort();
+                weekSelect
+                    .selectAll("option")
+                    .data(weeks)
+                    .enter()
+                    .append("option")
+                    .attr("value", (d) => d)
+                    .text((d) => d);
+
+                // Day Types from loadsData
+                const dayTypes = Array.from(
+                    new Set(loadsData.map((d) => d["Day Type"])),
+                ).sort();
+                daytypeSelect
+                    .selectAll("option")
+                    .data(dayTypes)
+                    .enter()
+                    .append("option")
+                    .attr("value", (d) => d)
+                    .text((d) => d);
+
+                // Identify routes that have load info
+                // loads.csv "Route" column presumably matches route_short_name or route_long_name
+                const loadRoutes = new Set(loadsData.map((d) => d.Route));
+
+                // Filter routesData to only those with load info
+                const filteredRoutes = routesData.filter((r) => {
+                    const routeName = r.route_id;
+                    return loadRoutes.has(routeName);
+                });
+
+                const uniqueRoutes = filteredRoutes.filter(
+                    (item, index, self) =>
+                        index ===
+                        self.findIndex((t) => t.route_id === item.route_id),
+                );
+
+                // Populate routes dropdown with uniqueRoutes only
+                routeSelect
+                    .selectAll("option")
+                    .data(uniqueRoutes)
+                    .enter()
+                    .append("option")
+                    .attr("value", (d) => d.route_id)
+                    .text((d) => d.route_id + " | " + d.route_long_name); // showing route_id, could also show route_short_name if desired
+
+                // Hours from loadsData
+                // Set event listeners for dropdown changes
+                weekSelect.on("change", updateVisualization);
+                daytypeSelect.on("change", updateVisualization);
+                routeSelect.on("change", updateVisualization);
+                directionSelect.on("change", updateVisualization);
+            }
+
+            function projectPoint(d) {
+                const point = map.latLngToLayerPoint([d.lat, d.lon]);
+                return [point.x, point.y];
+            }
+
+            const line = d3
+                .line()
+                .x((d) => projectPoint(d)[0])
+                .y((d) => projectPoint(d)[1]);
+
+            map.on("zoomend", redraw);
+            map.on("moveend", redraw);
+
+            function updateVisualization() {
+                const selectedWeek = weekSelect.property("value");
+                const selectedDayType = daytypeSelect.property("value");
+                const selectedRouteId = routeSelect.property("value");
+                const selectedDirection = directionSelect.property("value");
+
+                const selectedRoute = routesData.find(
+                    (r) => r.route_id === selectedRouteId,
+                );
+                if (!selectedRoute) {
+                    clearRoute();
+                    clearStops();
+                    loadInfo.text("No route found.");
+                    return;
+                }
+
+                let routeName = selectedRoute.route_id;
+                routeName = String(routeName).toUpperCase();
+
+                const directionMap = { NB: 0, SB: 1, EB: 0, WB: 1 };
+                const direction_id = directionMap[selectedDirection];
+
+                let filteredTrips = tripsData.filter(
+                    (d) =>
+                        d.route_id === selectedRouteId &&
+                        +d.direction_id === direction_id,
+                );
+
+                if (filteredTrips.length === 0) {
+                    clearRoute();
+                    clearStops();
+                    loadInfo.text("No trips found for the selected criteria.");
+                    return;
+                }
+
+                const targetTrip = filteredTrips[0];
+                const targetTripId = targetTrip.trip_id;
+                const targetShapeId = targetTrip.shape_id;
+                if (!targetShapeId) {
+                    clearRoute();
+                    clearStops();
+                    loadInfo.text("No shape found for the selected trip.");
+                    return;
+                }
+
+                let shapePoints = shapesData.filter(
+                    (s) => s.shape_id === targetShapeId,
+                );
+                shapePoints.sort(
+                    (a, b) => +a.shape_pt_sequence - +b.shape_pt_sequence,
+                );
+                shapePoints = shapePoints.map((d) => ({
+                    lat: +d.shape_pt_lat,
+                    lon: +d.shape_pt_lon,
+                }));
+                currentRouteData = shapePoints;
+
+                // Filter loadsData
+                const filteredLoads = loadsData.filter(
+                    (d) =>
+                        d.Week === selectedWeek &&
+                        d.Route === routeName &&
+                        d.Direction === selectedDirection,
+                );
+                console.log(filteredLoads);
+
+                let loadPercentage = null;
+                let tripsWithAPC = null;
+                if (filteredLoads.length > 0) {
+                    const totalLoadPercentage = filteredLoads.reduce(
+                        (sum, load) => {
+                            return sum + +load["Load Percentage"];
+                        },
+                        0,
+                    );
+
+                    const totalAPC = filteredLoads.reduce((sum, load) => {
+                        return sum + +load["Trips with APC"];
+                    }, 0);
+
+                    avgLoad = totalLoadPercentage / filteredLoads.length;
+                    avgAPC = totalAPC / filteredLoads.length;
+
+                    displayLoadInfo(avgLoad, avgAPC);
+                    createBarChart(filteredLoads);
+                } else {
+                    loadInfo.text(
+                        "No load data available for the selected parameters.",
+                    );
+                }
+
+                drawRouteAndFitBounds(shapePoints, avgLoad);
+
+                // Find stops for the trip
+                const tripStops = getStopsForTrip(targetTripId);
+                currentStopsData = tripStops.map((s) => ({
+                    ...s,
+                    lat: +s.stop_lat,
+                    lon: +s.stop_lon,
+                }));
+                drawStops(currentStopsData, loadPercentage);
+            }
+
+            function getStopsForTrip(tripId) {
+                let tripStopTimes = stopTimesData.filter(
+                    (st) => st.trip_id === tripId,
+                );
+                tripStopTimes.sort(
+                    (a, b) => +a.stop_sequence - +b.stop_sequence,
+                );
+
+                let stopsOnTrip = tripStopTimes
+                    .map((st) =>
+                        stopsData.find((s) => s.stop_id === st.stop_id),
+                    )
+                    .filter((d) => d);
+                return stopsOnTrip;
+            }
+
+            function drawRouteAndFitBounds(shapePoints, loadPercentage) {
+                if (routePath) routePath.remove();
+                routePath = g
+                    .append("path")
+                    .datum(shapePoints)
+                    .attr("class", "route");
+
+                if (loadPercentage == null) {
+                    routePath.attr("stroke", "#0b0c0c");
+                } else {
+                    let color = "#00703c";
+                    if (loadPercentage >= 0.5) {
+                        color = "#d4351c";
+                    } else if (loadPercentage >= 0.2) {
+                        color = "#ffdd00";
+                    }
+                    routePath.attr("stroke", color);
+                }
+
+                routePath.attr("d", line);
+
+                const bounds = L.latLngBounds(
+                    shapePoints.map((p) => [p.lat, p.lon]),
+                );
+                map.fitBounds(bounds, { padding: [50, 50] });
+            }
+
+            function displayLoadInfo(loadPercentage, tripsWithAPC) {
+                loadInfo.html("");
+                if (loadPercentage != null) {
+                    let color = "#00703c";
+                    if (loadPercentage >= 0.5) {
+                        color = "#d4351c";
+                    } else if (loadPercentage >= 0.2) {
+                        color = "#ffdd00";
+                    }
+
+                    loadInfo.html(`Avergae Load Percentage: ${loadPercentage.toFixed(2)}
+        <span class="load-indicator" style="background:${color}"></span><br/>
+        Average Trips with APC: ${tripsWithAPC.toFixed(2)}`);
+                }
+            }
+
+            function fillMissingHours(data) {
+                if (data.length === 0) return [];
+                const fullHours = Array.from({ length: 24 }, (_, i) =>
+                    String(i),
+                ); // 0 to 23
+                const dataMap = new Map(
+                    data.map((d) => [d.Hour, d["Load Percentage"]]),
+                );
+
+                // Return a complete dataset with default value 0 for missing hours
+                return fullHours.map((hour) => ({
+                    Hour: hour,
+                    "Load Percentage": dataMap.get(hour) || 0, // Use 0 if missing
+                }));
+            }
+
+            function createBarChart(data) {
+                const margin = { top: 30, right: 30, bottom: 50, left: 50 };
+                const width =
+                    d3.select("#chart").node().getBoundingClientRect().width -
+                    margin.left -
+                    margin.right;
+                const height =
+                    d3.select("#chart").node().getBoundingClientRect().height -
+                    margin.top -
+                    margin.bottom;
+
+                d3.select("#chart").select("svg").remove();
+
+                const svg = d3
+                    .select("#chart")
+                    .append("svg")
+                    .attr("width", width + margin.left + margin.right)
+                    .attr("height", height + margin.top + margin.bottom)
+                    .append("g")
+                    .attr(
+                        "transform",
+                        `translate(${margin.left},${margin.top})`,
+                    );
+
+                const completeData = fillMissingHours(data); // Ensure all 0-23 hours are present
+
+                if (data.length === 0) {
+                    svg.selectAll(".bar").remove();
+
+                    // Optionally, display a message
+                    svg.append("text")
+                        .attr("x", width / 2)
+                        .attr("y", height / 2)
+                        .attr("text-anchor", "middle")
+                        .attr("font-size", "16px")
+                        .attr("fill", "gray")
+                        .text("No data available");
+
+                    return; // Exit the function
+                }
+
+                // Scales
+                const x = d3
+                    .scaleBand()
+                    .domain(completeData.map((d) => d.Hour))
+                    .range([0, width])
+                    .padding(0.2);
+
+                const y = d3
+                    .scaleLinear()
+                    .domain([
+                        0,
+                        d3.max(completeData, (d) => d["Load Percentage"]),
+                    ])
+                    .nice()
+                    .range([height, 0]);
+
+                svg.append("g")
+                    .attr("transform", `translate(0,${height})`)
+                    .call(d3.axisBottom(x).tickFormat((d) => `${d}:00`))
+                    .selectAll("text")
+                    .attr("class", "axis-label")
+                    .style("text-anchor", "middle");
+
+                svg.append("g").call(d3.axisLeft(y));
+
+                const bars = svg.selectAll(".bar").data(completeData);
+
+                bars.enter()
+                    .append("rect")
+                    .attr("class", "bar")
+                    .attr("x", (d) => x(d.Hour))
+                    .attr("y", height) // Start from bottom
+                    .attr("width", x.bandwidth())
+                    .attr("fill", (d) => {
+                        let loadPercentage = d["Load Percentage"];
+                        let color = "#00703c"; // Default green
+                        if (loadPercentage >= 0.5) {
+                            color = "#d4351c"; // Red for >= 0.5
+                        } else if (loadPercentage >= 0.2) {
+                            color = "#ffdd00"; // Yellow for >= 0.2
+                        }
+                        return color;
+                    })
+                    .merge(bars)
+                    .transition()
+                    .duration(1000)
+                    .attr("y", (d) => y(d["Load Percentage"]))
+                    .attr("height", (d) => height - y(d["Load Percentage"]));
+
+                bars.exit()
+                    .transition()
+                    .duration(1000)
+                    .attr("y", y(0))
+                    .attr("height", 0)
+                    .remove();
+            }
+
+            function drawStops(stopsData, loadPercentage) {
+                clearStops();
+
+                stopsGroup = g.append("g").attr("class", "stops");
+
+                stopsGroup
+                    .selectAll("circle")
+                    .data(stopsData)
+                    .enter()
+                    .append("circle")
+                    .attr("class", "stop")
+                    .attr("r", 5)
+                    .attr("cx", (d) => projectPoint(d)[0])
+                    .attr("cy", (d) => projectPoint(d)[1])
+                    .on("mouseover", (event, d) => {
+                        console.log(d);
+                        showStopTooltip(d, loadPercentage, event);
+                    })
+                    .on("mousemove", (event) => {
+                        tooltip
+                            .style("top", event.pageY + 5 + "px")
+                            .style("left", event.pageX + 5 + "px");
+                    })
+                    .on("mouseout", () => {
+                        hideTooltip();
+                    });
+            }
+
+            function clearStops() {
+                if (stopsGroup) stopsGroup.remove();
+            }
+
+            function showStopTooltip(stop, loadPercentage, event) {
+                let content = `<strong>${stop.stop_name}</strong>`;
+                if (loadPercentage != null) {
+                    content += `<br/>Load: ${loadPercentage}`;
+                } else {
+                    content += `<br/>Load: N/A`;
+                }
+
+                tooltip
+                    .html(content)
+                    .style("visibility", "visible")
+                    .style("top", event.pageY + 5 + "px")
+                    .style("left", event.pageX + 5 + "px");
+            }
+
+            function hideTooltip() {
+                tooltip.style("visibility", "hidden");
+            }
+
+            function clearRoute() {
+                if (routePath) routePath.remove();
+                currentRouteData = [];
+            }
+
+            function redraw() {
+                if (routePath && currentRouteData.length > 0) {
+                    routePath.attr("d", line);
+                }
+
+                if (stopsGroup && currentStopsData.length > 0) {
+                    stopsGroup
+                        .selectAll("circle")
+                        .attr("cx", (d) => projectPoint(d)[0])
+                        .attr("cy", (d) => projectPoint(d)[1]);
+                }
+            }
+        </script>
+    </body>
+</html>
