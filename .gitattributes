@@ -1,0 +1,6 @@
+data/brooklyn/stop_times.txt filter=lfs diff=lfs merge=lfs -text
+data/manhattan/stop_times.txt filter=lfs diff=lfs merge=lfs -text
+data/queens/stop_times.txt filter=lfs diff=lfs merge=lfs -text
+data/statenisland/stop_times.txt filter=lfs diff=lfs merge=lfs -text
+data/bronx/stop_times.txt filter=lfs diff=lfs merge=lfs -text
+data/busco/stop_times.txt filter=lfs diff=lfs merge=lfs -text
